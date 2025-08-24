@@ -1,50 +1,135 @@
-﻿﻿<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Controle de Contatos</title>
+    <title>@ViewData["Title"] - MID'CAR Engenharia</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/layout.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.11.4/datatables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Controle de Contatos</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Página Inicial</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Contato" asp-action="Index">Contatos</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <a asp-controller="Home" asp-action="Index" class="sidebar-brand">
+                <i class="fas fa-car-side me-2"></i>
+                MID'CAR
+            </a>
+        </div>
+        <nav class="sidebar-menu">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">
+                        <i class="fas fa-home"></i>
+                        Página Inicial
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Cliente" ? "active" : "")" asp-controller="Cliente" asp-action="Index">
+                        <i class="fas fa-users"></i>
+                        Clientes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Veiculo" ? "active" : "")" asp-controller="Veiculo" asp-action="Index">
+                        <i class="fas fa-car"></i>
+                        Veículos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "OrdemServico" ? "active" : "")" asp-controller="OrdemServico" asp-action="Index">
+                        <i class="fas fa-tools"></i>
+                        Ordens de Serviço
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Orcamento" ? "active" : "")" asp-controller="Orcamento" asp-action="Index">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        Orçamentos
+                    </a>
+                </li>
+            </ul>
         </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - Controle de Contatos
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Top Header -->
+        <div class="top-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <button class="toggle-btn" id="toggleBtn">
+                        <i class="fas fa-bars me-2"></i>
+                        Menu
+                    </button>
+                    <h4 class="mb-0">@ViewData["Title"]</h4>
+                </div>
+                <div class="d-flex align-items-center">
+                    <span class="me-3">
+                        <i class="fas fa-user-circle me-2"></i>
+                        Administrador
+                    </span>
+                    <a href="/Auth/Logout" class="btn btn-outline-danger btn-sm">
+                        <i class="fas fa-sign-out-alt me-2"></i>
+                        Sair
+                    </a>
+                </div>
+            </div>
         </div>
-    </footer>
+
+        <!-- Content -->
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
+    </div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.11.4/datatables.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular-route.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <script>
+        $(document).ready(function() {
+            const sidebar = $('.sidebar');
+            const mainContent = $('#mainContent');
+            const overlay = $('#overlay');
+            const toggleBtn = $('#toggleBtn');
+            
+            // Toggle sidebar
+            toggleBtn.click(function() {
+                sidebar.toggleClass('show');
+                mainContent.toggleClass('sidebar-open');
+                overlay.toggleClass('show');
+            });
+            
+            // Close sidebar when clicking overlay
+            overlay.click(function() {
+                sidebar.removeClass('show');
+                mainContent.removeClass('sidebar-open');
+                overlay.removeClass('show');
+            });
+            
+            // Close sidebar when clicking outside on mobile
+            $(document).click(function(event) {
+                if ($(window).width() <= 768) {
+                    if (!$(event.target).closest('.sidebar, .toggle-btn').length) {
+                        sidebar.removeClass('show');
+                        mainContent.removeClass('sidebar-open');
+                        overlay.removeClass('show');
+                    }
+                }
+            });
+        });
+    </script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

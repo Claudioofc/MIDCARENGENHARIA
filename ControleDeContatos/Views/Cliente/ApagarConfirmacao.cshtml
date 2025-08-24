@@ -1,0 +1,123 @@
+@model ControleDeContatos.Models.ClienteModel
+
+@{
+    ViewData["Title"] = "Confirmar Exclusão";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="mb-0">
+                                <i class="fas fa-exclamation-triangle"></i> ⚠️ Confirmar Exclusão
+                            </h4>
+                        </div>
+                        <div class="col-auto">
+                            <a asp-action="Index" class="btn btn-light">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning" role="alert">
+                        <h5 class="alert-heading">
+                            <i class="fas fa-exclamation-triangle"></i> Atenção!
+                        </h5>
+                        <p class="mb-0">
+                            Você está prestes a excluir o cliente <strong>@Model.Nome</strong>. 
+                            Esta ação não pode ser desfeita.
+                        </p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-user"></i> Dados do Cliente</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Nome:</strong></td>
+                                    <td>@Model.Nome</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CPF/CNPJ:</strong></td>
+                                    <td>@Model.CpfCnpj</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Telefone:</strong></td>
+                                    <td>@Model.Telefone</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Email:</strong></td>
+                                    <td>@(string.IsNullOrEmpty(Model.Email) ? "-" : Model.Email)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Data Cadastro:</strong></td>
+                                    <td>@Model.DataCadastro.ToString("dd/MM/yyyy HH:mm")</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-map-marker-alt"></i> Endereço</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Endereço:</strong></td>
+                                    <td>@(string.IsNullOrEmpty(Model.Endereco) ? "-" : Model.Endereco)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cidade/UF:</strong></td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(Model.Cidade))
+                                        {
+                                            @Model.Cidade@(!string.IsNullOrEmpty(Model.Estado) ? "/" + Model.Estado : "")
+                                        }
+                                        else
+                                        {
+                                            <span>-</span>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CEP:</strong></td>
+                                    <td>@(string.IsNullOrEmpty(Model.Cep) ? "-" : Model.Cep)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Status:</strong></td>
+                                    <td>
+                                        @if (Model.Ativo)
+                                        {
+                                            <span class="badge bg-success">Ativo</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Inativo</span>
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Observacoes))
+                    {
+                        <div class="mb-3">
+                            <h6><i class="fas fa-sticky-note"></i> Observações</h6>
+                            <p class="text-muted">@Model.Observacoes</p>
+                        </div>
+                    }
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                        <a asp-action="Apagar" asp-route-id="@Model.Id" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Confirmar Exclusão
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,12 +1,14 @@
-﻿using ControleDeContatos.Models;
+using ControleDeContatos.Models;
 using ControleDeContatos.Repositorio;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ControDeContatos.Controllers
 {
+    [Authorize]
     public class ContatoController : Controller
     {
         private readonly IContatoRepositorio _contatoRepositorio;

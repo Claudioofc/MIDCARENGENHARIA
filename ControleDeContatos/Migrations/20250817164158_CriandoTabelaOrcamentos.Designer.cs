@@ -4,14 +4,16 @@ using ControleDeContatos.Models.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ControleDeContatos.Migrations
 {
     [DbContext(typeof(BancoContext))]
-    partial class BancoContextModelSnapshot : ModelSnapshot
+    [Migration("20250817164158_CriandoTabelaOrcamentos")]
+    partial class CriandoTabelaOrcamentos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,11 +234,6 @@ namespace ControleDeContatos.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("Mecanico")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<string>("NumeroOS")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -286,10 +283,6 @@ namespace ControleDeContatos.Migrations
                     b.Property<int>("ClienteId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Combustivel")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
                     b.Property<string>("Cor")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
@@ -323,10 +316,6 @@ namespace ControleDeContatos.Migrations
                     b.Property<string>("Quilometragem")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("Renavam")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 

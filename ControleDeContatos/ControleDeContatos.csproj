@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+    <AssemblyName>MidCarEngenharia</AssemblyName>
+    <RootNamespace>MidCarEngenharia</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

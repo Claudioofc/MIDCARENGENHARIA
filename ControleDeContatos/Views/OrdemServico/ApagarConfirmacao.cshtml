@@ -1,0 +1,147 @@
+@model ControleDeContatos.Models.OrdemServicoModel
+
+@{
+    ViewData["Title"] = "Confirmar Exclusão";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="mb-0">
+                                <i class="fas fa-exclamation-triangle"></i> ⚠️ Confirmar Exclusão
+                            </h4>
+                        </div>
+                        <div class="col-auto">
+                            <a asp-action="Index" class="btn btn-light">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <h5 class="alert-heading">
+                            <i class="fas fa-exclamation-triangle"></i> Atenção!
+                        </h5>
+                        <p class="mb-0">
+                            Você está prestes a excluir permanentemente a Ordem de Serviço <strong>@Model.NumeroOS</strong>. 
+                            Esta ação não pode ser desfeita.
+                        </p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary">
+                                <i class="fas fa-clipboard-list"></i> Detalhes da OS
+                            </h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Número:</strong></td>
+                                    <td>@Model.NumeroOS</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Status:</strong></td>
+                                    <td>
+                                        @{
+                                            var statusClass = Model.Status switch
+                                            {
+                                                "Aberta" => "bg-warning",
+                                                "Em Andamento" => "bg-info",
+                                                "Finalizada" => "bg-success",
+                                                "Cancelada" => "bg-danger",
+                                                _ => "bg-secondary"
+                                            };
+                                        }
+                                        <span class="badge @statusClass">@Model.Status</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Valor:</strong></td>
+                                    <td><span class="badge bg-success">R$ @Model.Valor.ToString("N2")</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Data Abertura:</strong></td>
+                                    <td>@Model.DataAbertura.ToString("dd/MM/yyyy HH:mm")</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary">
+                                <i class="fas fa-user"></i> Cliente
+                            </h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Nome:</strong></td>
+                                    <td>@Model.Cliente?.Nome</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Telefone:</strong></td>
+                                    <td>@Model.Cliente?.Telefone</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Email:</strong></td>
+                                    <td>@Model.Cliente?.Email</td>
+                                </tr>
+                            </table>
+
+                            <h6 class="text-primary mt-3">
+                                <i class="fas fa-car"></i> Veículo
+                            </h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Placa:</strong></td>
+                                    <td>@Model.Veiculo?.Placa</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Marca/Modelo:</strong></td>
+                                    <td>@Model.Veiculo?.Marca @Model.Veiculo?.Modelo</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Ano:</strong></td>
+                                    <td>@Model.Veiculo?.Ano</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Descricao))
+                    {
+                        <div class="mt-3">
+                            <h6 class="text-primary">
+                                <i class="fas fa-clipboard"></i> Descrição do Serviço
+                            </h6>
+                            <div class="border rounded p-3 bg-light">
+                                @Model.Descricao
+                            </div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.Observacoes))
+                    {
+                        <div class="mt-3">
+                            <h6 class="text-primary">
+                                <i class="fas fa-sticky-note"></i> Observações
+                            </h6>
+                            <div class="border rounded p-3 bg-light">
+                                @Model.Observacoes
+                            </div>
+                        </div>
+                    }
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a asp-action="Index" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                        <a asp-action="Apagar" asp-route-id="@Model.Id" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Confirmar Exclusão
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,11 +1,13 @@
 using ControleDeContatos.Models.Data;
 using ControleDeContatos.Repositorio;
+using ControleDeContatos.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +30,25 @@ namespace ControleDeContatos
             services.AddControllersWithViews();
             services.AddEntityFrameworkSqlServer()
                 .AddDbContext<BancoContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DataBase")));
-            services.AddScoped<IContatoRepositorio, ContatoRepositorio>();
+            services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
+            services.AddScoped<IVeiculoRepositorio, VeiculoRepositorio>();
+            services.AddScoped<IOrdemServicoRepositorio, OrdemServicoRepositorio>();
+            services.AddScoped<IOrcamentoRepositorio, OrcamentoRepositorio>();
+            services.AddScoped<IItemOrcamentoRepositorio, ItemOrcamentoRepositorio>();
+            
+            // Serviços HTTP
+            services.AddHttpClient();
+            services.AddScoped<IDetranService, DetranService>();
+            
+            // Configuração de autenticação
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Auth/Login";
+                    options.LogoutPath = "/Auth/Logout";
+                    options.AccessDeniedPath = "/Auth/Login";
+                    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +66,7 @@ namespace ControleDeContatos
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

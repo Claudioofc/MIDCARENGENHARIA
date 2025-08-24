@@ -1,0 +1,118 @@
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR" ng-app="oficinaApp">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - MID'CAR Engenharia</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/login.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body ng-controller="LoginController">
+    <div class="login-container">
+        <div class="logo-section">
+            <div class="logo">
+                MID'CAR ENGENHARIA
+            </div>
+            <div class="tagline">Excelência em Serviços Automotivos</div>
+        </div>
+
+        <form ng-submit="fazerLogin()" novalidate>
+            <div class="alert alert-danger" ng-show="erro" role="alert">
+                {{ erro }}
+            </div>
+
+            <div class="form-group">
+                <label for="username">Nome de usuário</label>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" 
+                           id="username"
+                           class="form-control" 
+                           ng-model="usuario.username" 
+                           placeholder="Digite seu nome de usuário"
+                           required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" 
+                           id="password"
+                           class="form-control" 
+                           ng-model="usuario.password" 
+                           placeholder="Digite sua senha"
+                           required>
+                </div>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="stayLoggedIn">
+                <label for="stayLoggedIn">Permanecer logado</label>
+            </div>
+
+            <button type="submit" 
+                    class="btn-login" 
+                    ng-disabled="carregando">
+                <i class="fas fa-sign-in-alt"></i>
+                <span ng-if="!carregando">Acessar sistema</span>
+                <span ng-if="carregando">Acessando...</span>
+            </button>
+        </form>
+    </div>
+
+    <div class="copyright">
+        &copy; 2025 MID'CAR Engenharia e Serviços Automotivos
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+    <script>
+        angular.module('oficinaApp', [])
+        .controller('LoginController', function($scope, $http) {
+            $scope.usuario = {
+                username: '',
+                password: ''
+            };
+            $scope.erro = '';
+            $scope.carregando = false;
+
+            $scope.fazerLogin = function() {
+                if (!$scope.usuario.username || !$scope.usuario.password) {
+                    $scope.erro = 'Por favor, preencha todos os campos';
+                    return;
+                }
+
+                $scope.carregando = true;
+                $scope.erro = '';
+
+                // Criar form data para enviar via POST
+                var formData = new FormData();
+                formData.append('username', $scope.usuario.username);
+                formData.append('password', $scope.usuario.password);
+
+                $http.post('/Auth/Login', formData, {
+                    headers: {
+                        'Content-Type': undefined
+                    }
+                }).then(function(response) {
+                    // Se chegou aqui, o login foi bem-sucedido
+                    window.location.href = '/Home/Index';
+                }).catch(function(error) {
+                    $scope.erro = 'Usuário ou senha inválidos';
+                    $scope.carregando = false;
+                });
+            };
+        });
+    </script>
+</body>
+</html>

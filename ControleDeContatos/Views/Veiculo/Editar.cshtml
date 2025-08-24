@@ -1,0 +1,197 @@
+@model ControleDeContatos.Models.VeiculoModel
+
+@{
+    ViewData["Title"] = "Editar Veículo";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="mb-0">
+                                <i class="fas fa-car"></i> ✏️ Editar Veículo
+                            </h4>
+                        </div>
+                        <div class="col-auto">
+                            <a asp-action="Index" class="btn btn-light">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Editar" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="DataCadastro" />
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label asp-for="Placa" class="form-label">
+                                        <i class="fas fa-id-badge"></i> Placa *
+                                    </label>
+                                    <input asp-for="Placa" class="form-control" placeholder="ABC-1234" maxlength="10">
+                                    <span asp-validation-for="Placa" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label asp-for="Marca" class="form-label">
+                                        <i class="fas fa-tag"></i> Marca *
+                                    </label>
+                                    <input asp-for="Marca" class="form-control" placeholder="Ex: Ford, Chevrolet, Fiat">
+                                    <span asp-validation-for="Marca" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label asp-for="Modelo" class="form-label">
+                                        <i class="fas fa-car"></i> Modelo *
+                                    </label>
+                                    <input asp-for="Modelo" class="form-control" placeholder="Ex: Fiesta, Onix, Mobi">
+                                    <span asp-validation-for="Modelo" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label asp-for="Ano" class="form-label">
+                                        <i class="fas fa-calendar"></i> Ano *
+                                    </label>
+                                    <input asp-for="Ano" type="number" class="form-control" min="1900" max="2030" placeholder="2020">
+                                    <span asp-validation-for="Ano" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label asp-for="Cor" class="form-label">
+                                        <i class="fas fa-palette"></i> Cor
+                                    </label>
+                                    <input asp-for="Cor" class="form-control" placeholder="Ex: Branco, Preto, Prata">
+                                    <span asp-validation-for="Cor" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label asp-for="Chassi" class="form-label">
+                                        <i class="fas fa-barcode"></i> Chassi
+                                    </label>
+                                    <input asp-for="Chassi" class="form-control" placeholder="Número do chassi">
+                                    <span asp-validation-for="Chassi" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label asp-for="Motor" class="form-label">
+                                        <i class="fas fa-cog"></i> Motor
+                                    </label>
+                                    <input asp-for="Motor" class="form-control" placeholder="Ex: 1.0, 1.6, 2.0">
+                                    <span asp-validation-for="Motor" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Quilometragem" class="form-label">
+                                        <i class="fas fa-tachometer-alt"></i> Quilometragem
+                                    </label>
+                                    <input asp-for="Quilometragem" class="form-control" placeholder="Ex: 50.000">
+                                    <span asp-validation-for="Quilometragem" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="ClienteId" class="form-label">
+                                        <i class="fas fa-user"></i> Cliente *
+                                    </label>
+                                    <select asp-for="ClienteId" class="form-select" required>
+                                        <option value="">Selecione um cliente...</option>
+                                        @foreach (var cliente in ViewBag.Clientes)
+                                        {
+                                            <option value="@cliente.Id">@cliente.Nome - @cliente.CpfCnpj</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="ClienteId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Observacoes" class="form-label">
+                                <i class="fas fa-sticky-note"></i> Observações
+                            </label>
+                            <textarea asp-for="Observacoes" class="form-control" rows="3" 
+                                      placeholder="Informações adicionais sobre o veículo"></textarea>
+                            <span asp-validation-for="Observacoes" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input asp-for="Ativo" class="form-check-input" type="checkbox">
+                                <label asp-for="Ativo" class="form-check-label">
+                                    Veículo ativo
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save"></i> Atualizar Veículo
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Máscara para placa (formato brasileiro)
+            $('#Placa').on('input', function() {
+                var value = $(this).val().toUpperCase();
+                // Remove caracteres especiais e mantém apenas letras e números
+                value = value.replace(/[^A-Z0-9]/g, '');
+                
+                // Aplica máscara: ABC-1234 ou ABC1D23
+                if (value.length <= 3) {
+                    value = value;
+                } else if (value.length <= 7) {
+                    value = value.substring(0, 3) + '-' + value.substring(3);
+                } else {
+                    value = value.substring(0, 3) + '-' + value.substring(3, 7);
+                }
+                
+                $(this).val(value);
+            });
+
+            // Máscara para quilometragem
+            $('#Quilometragem').on('input', function() {
+                var value = $(this).val().replace(/\D/g, '');
+                if (value.length > 0) {
+                    value = parseInt(value).toLocaleString('pt-BR');
+                }
+                $(this).val(value);
+            });
+
+            // Máscara para chassi (apenas letras e números)
+            $('#Chassi').on('input', function() {
+                var value = $(this).val().toUpperCase();
+                value = value.replace(/[^A-Z0-9]/g, '');
+                $(this).val(value);
+            });
+        });
+    </script>
+}

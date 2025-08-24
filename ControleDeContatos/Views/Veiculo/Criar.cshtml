@@ -1,0 +1,324 @@
+@model ControleDeContatos.Models.VeiculoModel
+
+@{
+    ViewData["Title"] = "Novo Veículo";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <div class="row align-items-center">
+                        <div class="col">
+                                                         <h4 class="mb-0">
+                                 Novo Veículo
+                             </h4>
+                        </div>
+                        <div class="col-auto">
+                                                         <a asp-action="Index" class="btn btn-light">
+                                 Voltar
+                             </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Criar" method="post">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                                                         <label asp-for="Placa" class="form-label">
+                                         Placa *
+                                     </label>
+                                    <div class="input-group">
+                                        <input asp-for="Placa" class="form-control" placeholder="ABC-1234" maxlength="10" id="placa">
+                                                                                 <button type="button" class="btn btn-outline-primary" onclick="consultarPlaca()">
+                                             Consultar
+                                         </button>
+                                    </div>
+                                    <span asp-validation-for="Placa" class="text-danger"></span>
+                                                                         <div id="loadingPlaca" class="mt-2" style="display: none;">
+                                         <small class="text-muted">
+                                             Consultando DETRAN...
+                                         </small>
+                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                                                         <label asp-for="Marca" class="form-label">
+                                         Marca *
+                                     </label>
+                                    <input asp-for="Marca" class="form-control" placeholder="Ex: Ford, Chevrolet, Fiat">
+                                    <span asp-validation-for="Marca" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                                                         <label asp-for="Modelo" class="form-label">
+                                         Modelo *
+                                     </label>
+                                    <input asp-for="Modelo" class="form-control" placeholder="Ex: Fiesta, Onix, Mobi">
+                                    <span asp-validation-for="Modelo" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                                                 <div class="row">
+                             <div class="col-md-2">
+                                 <div class="mb-3">
+                                     <label asp-for="Ano" class="form-label">
+                                         Ano *
+                                     </label>
+                                     <input asp-for="Ano" type="number" class="form-control" min="1900" max="2030" placeholder="2020">
+                                     <span asp-validation-for="Ano" class="text-danger"></span>
+                                 </div>
+                             </div>
+                             <div class="col-md-2">
+                                 <div class="mb-3">
+                                     <label asp-for="Cor" class="form-label">
+                                         Cor
+                                     </label>
+                                     <input asp-for="Cor" class="form-control" placeholder="Ex: Branco, Preto, Prata">
+                                     <span asp-validation-for="Cor" class="text-danger"></span>
+                                 </div>
+                             </div>
+                             <div class="col-md-2">
+                                 <div class="mb-3">
+                                     <label asp-for="Chassi" class="form-label">
+                                         Chassi
+                                     </label>
+                                     <input asp-for="Chassi" class="form-control" placeholder="Número do chassi">
+                                     <span asp-validation-for="Chassi" class="text-danger"></span>
+                                 </div>
+                             </div>
+                             <div class="col-md-2">
+                                 <div class="mb-3">
+                                     <label asp-for="Motor" class="form-label">
+                                         Motor
+                                     </label>
+                                     <input asp-for="Motor" class="form-control" placeholder="Ex: 1.0, 1.6, 2.0">
+                                     <span asp-validation-for="Motor" class="text-danger"></span>
+                                 </div>
+                             </div>
+                             <div class="col-md-2">
+                                 <div class="mb-3">
+                                     <label asp-for="Combustivel" class="form-label">
+                                         Combustível
+                                     </label>
+                                     <input asp-for="Combustivel" class="form-control" placeholder="Ex: Flex, Gasolina, Diesel">
+                                     <span asp-validation-for="Combustivel" class="text-danger"></span>
+                                 </div>
+                             </div>
+                             <div class="col-md-2">
+                                 <div class="mb-3">
+                                     <label asp-for="Renavam" class="form-label">
+                                         RENAVAM
+                                     </label>
+                                     <input asp-for="Renavam" class="form-control" placeholder="12345678901" maxlength="11">
+                                     <span asp-validation-for="Renavam" class="text-danger"></span>
+                                 </div>
+                             </div>
+                         </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                                                         <label asp-for="Quilometragem" class="form-label">
+                                         Quilometragem
+                                     </label>
+                                    <input asp-for="Quilometragem" class="form-control" placeholder="Ex: 50.000">
+                                    <span asp-validation-for="Quilometragem" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                                                         <label asp-for="ClienteId" class="form-label">
+                                         Cliente *
+                                     </label>
+                                    <select asp-for="ClienteId" class="form-select" required>
+                                        <option value="">Selecione um cliente...</option>
+                                        @foreach (var cliente in ViewBag.Clientes)
+                                        {
+                                            <option value="@cliente.Id">@cliente.Nome - @cliente.CpfCnpj</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="ClienteId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                                                         <label asp-for="Observacoes" class="form-label">
+                                 Observações
+                             </label>
+                            <textarea asp-for="Observacoes" class="form-control" rows="3" 
+                                      placeholder="Informações adicionais sobre o veículo"></textarea>
+                            <span asp-validation-for="Observacoes" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input asp-for="Ativo" class="form-check-input" type="checkbox" checked>
+                                <label asp-for="Ativo" class="form-check-label">
+                                    Veículo ativo
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                                                         <a asp-action="Index" class="btn btn-secondary">
+                                 Cancelar
+                             </a>
+                                                         <button type="submit" class="btn btn-success">
+                                 Salvar Veículo
+                             </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Máscara para placa (formato brasileiro)
+            $('#Placa').on('input', function() {
+                var value = $(this).val().toUpperCase();
+                // Remove caracteres especiais e mantém apenas letras e números
+                value = value.replace(/[^A-Z0-9]/g, '');
+                
+                // Aplica máscara: ABC-1234 ou ABC1D23
+                if (value.length <= 3) {
+                    value = value;
+                } else if (value.length <= 7) {
+                    value = value.substring(0, 3) + '-' + value.substring(3);
+                } else {
+                    value = value.substring(0, 3) + '-' + value.substring(3, 7);
+                }
+                
+                $(this).val(value);
+            });
+
+            // Máscara para quilometragem
+            $('#Quilometragem').on('input', function() {
+                var value = $(this).val().replace(/\D/g, '');
+                if (value.length > 0) {
+                    value = parseInt(value).toLocaleString('pt-BR');
+                }
+                $(this).val(value);
+            });
+
+                         // Máscara para chassi (apenas letras e números)
+             $('#Chassi').on('input', function() {
+                 var value = $(this).val().toUpperCase();
+                 value = value.replace(/[^A-Z0-9]/g, '');
+                 $(this).val(value);
+             });
+
+             // Máscara para RENAVAM (apenas números)
+             $('#Renavam').on('input', function() {
+                 var value = $(this).val().replace(/\D/g, '');
+                 $(this).val(value);
+             });
+        });
+
+        // Função para consultar placa no DETRAN
+        function consultarPlaca() {
+            var placa = $('#placa').val().trim();
+            
+            if (!placa) {
+                alert('Por favor, informe a placa do veículo.');
+                return;
+            }
+
+            console.log('Consultando placa:', placa);
+
+            // Mostrar loading
+            $('#loadingPlaca').show();
+            
+            // Fazer requisição AJAX
+            $.ajax({
+                url: '@Url.Action("ConsultarPlaca", "Veiculo")',
+                type: 'POST',
+                data: { placa: placa },
+                dataType: 'json',
+                contentType: 'application/x-www-form-urlencoded',
+                success: function(response) {
+                    $('#loadingPlaca').hide();
+                    
+                    console.log('Resposta completa do servidor:', response);
+                    console.log('Sucesso:', response.sucesso);
+                    console.log('Marca:', response.marca);
+                    console.log('Modelo:', response.modelo);
+                    console.log('Ano:', response.ano);
+                    
+                    if (response && response.sucesso) {
+                        // Preencher os campos com os dados retornados
+                        if (response.marca) {
+                            $('#Marca').val(response.marca);
+                            console.log('Campo Marca preenchido com:', response.marca);
+                        }
+                        if (response.modelo) {
+                            $('#Modelo').val(response.modelo);
+                            console.log('Campo Modelo preenchido com:', response.modelo);
+                        }
+                        if (response.ano) {
+                            $('#Ano').val(response.ano);
+                            console.log('Campo Ano preenchido com:', response.ano);
+                        }
+                        if (response.cor) {
+                            $('#Cor').val(response.cor);
+                            console.log('Campo Cor preenchido com:', response.cor);
+                        }
+                        if (response.chassi) {
+                            $('#Chassi').val(response.chassi);
+                            console.log('Campo Chassi preenchido com:', response.chassi);
+                        }
+                                                 if (response.motor) {
+                             $('#Motor').val(response.motor);
+                             console.log('Campo Motor preenchido com:', response.motor);
+                         }
+                         if (response.combustivel) {
+                             $('#Combustivel').val(response.combustivel);
+                             console.log('Campo Combustível preenchido com:', response.combustivel);
+                         }
+                         if (response.renavam) {
+                             $('#Renavam').val(response.renavam);
+                             console.log('Campo RENAVAM preenchido com:', response.renavam);
+                         }
+                         if (response.quilometragem) {
+                             $('#Quilometragem').val(response.quilometragem);
+                             console.log('Campo Quilometragem preenchido com:', response.quilometragem);
+                         }
+                        
+                        // Mostrar mensagem de sucesso
+                        var mensagem = 'Dados do veículo carregados da base nacional!\n\n';
+                        if (response.marca) mensagem += 'Marca: ' + response.marca + '\n';
+                        if (response.modelo) mensagem += 'Modelo: ' + response.modelo + '\n';
+                        if (response.ano) mensagem += 'Ano: ' + response.ano + '\n';
+                        if (response.cor) mensagem += 'Cor: ' + response.cor + '\n';
+                        if (response.proprietario) mensagem += 'Proprietário: ' + response.proprietario + '\n';
+                        if (response.situacao) mensagem += 'Situação: ' + response.situacao;
+                        
+                        alert(mensagem);
+                    } else {
+                        var erroMsg = response && response.mensagem ? response.mensagem : 'Erro desconhecido';
+                        alert('Erro ao consultar placa: ' + erroMsg);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('#loadingPlaca').hide();
+                    console.error('Erro na requisição:', xhr, status, error);
+                    console.error('Status:', xhr.status);
+                    console.error('ResponseText:', xhr.responseText);
+                    alert('Erro ao conectar com o serviço. Status: ' + xhr.status + '\nErro: ' + error);
+                }
+            });
+        }
+
+
+    </script>
+}

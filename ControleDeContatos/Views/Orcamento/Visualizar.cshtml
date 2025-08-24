@@ -1,0 +1,119 @@
+@model ControleDeContatos.Models.OrcamentoModel
+
+@{
+    ViewData["Title"] = "Visualizar Orçamento";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-eye"></i> 💰 Visualizar Orçamento - @Model.NumeroOrcamento
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>Informações Gerais</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Número:</strong></td>
+                                    <td>@Model.NumeroOrcamento</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Status:</strong></td>
+                                    <td>@Model.Status</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Valor Total:</strong></td>
+                                    <td>R$ @Model.ValorTotal.ToString("N2")</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Data Criação:</strong></td>
+                                    <td>@Model.DataCriacao.ToString("dd/MM/yyyy HH:mm")</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cliente:</strong></td>
+                                    <td>@Model.Cliente?.Nome</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Veículo:</strong></td>
+                                    <td>@Model.Veiculo?.Placa - @Model.Veiculo?.Marca @Model.Veiculo?.Modelo</td>
+                                </tr>
+                            </table>
+
+                            <h5>Descrição</h5>
+                            <div class="border rounded p-3 bg-light">
+                                @if (!string.IsNullOrEmpty(Model.Descricao))
+                                {
+                                    @Model.Descricao
+                                }
+                                else
+                                {
+                                    <em class="text-muted">Nenhuma descrição informada</em>
+                                }
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(Model.Observacoes))
+                            {
+                                <h5 class="mt-3">Observações</h5>
+                                <div class="border rounded p-3 bg-light">
+                                    @Model.Observacoes
+                                </div>
+                            }
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0">Ações</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-grid gap-2">
+                                        <a asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-primary">
+                                            <i class="fas fa-edit"></i> Editar Orçamento
+                                        </a>
+                                        
+                                        @if (Model.Status == "Pendente")
+                                        {
+                                            <form asp-action="Aprovar" asp-route-id="@Model.Id" method="post" style="display: inline;">
+                                                <button type="submit" class="btn btn-success w-100 mb-2"
+                                                        onclick="return confirm('Confirmar aprovação do orçamento?')">
+                                                    <i class="fas fa-check"></i> Aprovar
+                                                </button>
+                                            </form>
+                                            
+                                            <form asp-action="Rejeitar" asp-route-id="@Model.Id" method="post" style="display: inline;">
+                                                <button type="submit" class="btn btn-danger w-100 mb-2"
+                                                        onclick="return confirm('Confirmar rejeição do orçamento?')">
+                                                    <i class="fas fa-times"></i> Rejeitar
+                                                </button>
+                                            </form>
+                                            
+                                            <form asp-action="ConverterEmOS" asp-route-id="@Model.Id" method="post" style="display: inline;">
+                                                <button type="submit" class="btn btn-warning w-100 mb-2"
+                                                        onclick="return confirm('Converter orçamento em Ordem de Serviço?')">
+                                                    <i class="fas fa-exchange-alt"></i> Converter em OS
+                                                </button>
+                                            </form>
+                                        }
+                                        
+                                        <a asp-action="ApagarConfirmacao" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                                            <i class="fas fa-trash"></i> Excluir
+                                        </a>
+                                        
+                                        <a asp-action="Index" class="btn btn-secondary">
+                                            <i class="fas fa-arrow-left"></i> Voltar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

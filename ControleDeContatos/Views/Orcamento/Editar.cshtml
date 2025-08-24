@@ -1,0 +1,188 @@
+@model ControleDeContatos.Models.OrcamentoModel
+
+@{
+    ViewData["Title"] = "Editar Orçamento";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="mb-0">
+                                <i class="fas fa-edit"></i> 💰 Editar Orçamento - @Model.NumeroOrcamento
+                            </h4>
+                        </div>
+                        <div class="col-auto">
+                            <a asp-action="Index" class="btn btn-light">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Editar" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="DataCriacao" />
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="NumeroOrcamento" class="form-label">
+                                        <i class="fas fa-hashtag"></i> Número do Orçamento
+                                    </label>
+                                    <input asp-for="NumeroOrcamento" class="form-control" readonly />
+                                    <span asp-validation-for="NumeroOrcamento" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Status" class="form-label">
+                                        <i class="fas fa-info-circle"></i> Status
+                                    </label>
+                                    <select asp-for="Status" class="form-select">
+                                        <option value="">Selecione o status</option>
+                                        <option value="Pendente">Pendente</option>
+                                        <option value="Aprovado">Aprovado</option>
+                                        <option value="Rejeitado">Rejeitado</option>
+                                        <option value="Convertido em OS">Convertido em OS</option>
+                                    </select>
+                                    <span asp-validation-for="Status" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="ClienteId" class="form-label">
+                                        <i class="fas fa-user"></i> Cliente
+                                    </label>
+                                    <select asp-for="ClienteId" class="form-select" id="clienteSelect">
+                                        <option value="">Selecione o cliente</option>
+                                        @foreach (var cliente in ViewBag.Clientes)
+                                        {
+                                            if (cliente.Id == Model.ClienteId)
+                                            {
+                                                <option value="@cliente.Id" selected>
+                                                    @cliente.Nome - @cliente.Telefone
+                                                </option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@cliente.Id">
+                                                    @cliente.Nome - @cliente.Telefone
+                                                </option>
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="ClienteId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="VeiculoId" class="form-label">
+                                        <i class="fas fa-car"></i> Veículo
+                                    </label>
+                                    <select asp-for="VeiculoId" class="form-select" id="veiculoSelect">
+                                        <option value="">Selecione o veículo</option>
+                                    </select>
+                                    <span asp-validation-for="VeiculoId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Descricao" class="form-label">
+                                <i class="fas fa-align-left"></i> Descrição do Orçamento
+                            </label>
+                            <textarea asp-for="Descricao" class="form-control" rows="4" placeholder="Descreva os serviços/produtos do orçamento..."></textarea>
+                            <span asp-validation-for="Descricao" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="ValorTotal" class="form-label">
+                                        <i class="fas fa-dollar-sign"></i> Valor Total
+                                    </label>
+                                    <input asp-for="ValorTotal" class="form-control" type="text" id="valorInput" placeholder="0,00" />
+                                    <span asp-validation-for="ValorTotal" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="DataValidade" class="form-label">
+                                        <i class="fas fa-calendar"></i> Data de Validade
+                                    </label>
+                                    <input asp-for="DataValidade" class="form-control" type="date" />
+                                    <span asp-validation-for="DataValidade" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Observacoes" class="form-label">
+                                <i class="fas fa-sticky-note"></i> Observações
+                            </label>
+                            <textarea asp-for="Observacoes" class="form-control" rows="3" placeholder="Observações adicionais..."></textarea>
+                            <span asp-validation-for="Observacoes" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Atualizar Orçamento
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Máscara para valor
+            $('#valorInput').mask('#.##0,00', {reverse: true});
+
+            // Carregar veículos quando cliente for selecionado
+            $('#clienteSelect').change(function() {
+                var clienteId = $(this).val();
+                var veiculoSelect = $('#veiculoSelect');
+                
+                veiculoSelect.empty();
+                veiculoSelect.append('<option value="">Selecione o veículo</option>');
+                
+                if (clienteId) {
+                    $.get('/Orcamento/BuscarVeiculosPorCliente', { clienteId: clienteId }, function(veiculos) {
+                        $.each(veiculos, function(index, veiculo) {
+                            var selected = veiculo.id == @Model.VeiculoId ? 'selected' : '';
+                            veiculoSelect.append('<option value="' + veiculo.id + '" ' + selected + '>' + 
+                                veiculo.placa + ' - ' + veiculo.marca + ' ' + veiculo.modelo + '</option>');
+                        });
+                    });
+                }
+            });
+
+            // Carregar veículos do cliente atual na inicialização
+            if ($('#clienteSelect').val()) {
+                $('#clienteSelect').trigger('change');
+            }
+
+            // Converter valor para formato decimal antes de enviar
+            $('form').submit(function() {
+                var valorInput = $('#valorInput');
+                var valor = valorInput.val().replace(/\./g, '').replace(',', '.');
+                valorInput.val(valor);
+            });
+        });
+    </script>
+}

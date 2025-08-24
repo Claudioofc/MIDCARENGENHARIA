@@ -1,0 +1,113 @@
+@model ControleDeContatos.Models.OrcamentoModel
+
+@{
+    ViewData["Title"] = "Confirmar Exclusão";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="mb-0">
+                                <i class="fas fa-exclamation-triangle"></i> ⚠️ Confirmar Exclusão
+                            </h4>
+                        </div>
+                        <div class="col-auto">
+                            <a asp-action="Index" class="btn btn-light">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning" role="alert">
+                        <h5 class="alert-heading">
+                            <i class="fas fa-exclamation-triangle"></i> Atenção!
+                        </h5>
+                        <p class="mb-0">
+                            Você está prestes a excluir permanentemente o orçamento <strong>@Model.NumeroOrcamento</strong>. 
+                            Esta ação não pode ser desfeita.
+                        </p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-info-circle"></i> Detalhes do Orçamento</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Número:</strong></td>
+                                    <td>@Model.NumeroOrcamento</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cliente:</strong></td>
+                                    <td>@Model.Cliente?.Nome</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Veículo:</strong></td>
+                                    <td>@Model.Veiculo?.Placa - @Model.Veiculo?.Marca @Model.Veiculo?.Modelo</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Valor Total:</strong></td>
+                                    <td><span class="badge bg-success">R$ @Model.ValorTotal.ToString("N2")</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Status:</strong></td>
+                                    <td>
+                                        @{
+                                            var statusClass = Model.Status switch
+                                            {
+                                                "Pendente" => "bg-warning",
+                                                "Aprovado" => "bg-success",
+                                                "Rejeitado" => "bg-danger",
+                                                "Convertido em OS" => "bg-info",
+                                                _ => "bg-secondary"
+                                            };
+                                        }
+                                        <span class="badge @statusClass">@Model.Status</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Data Criação:</strong></td>
+                                    <td>@Model.DataCriacao.ToString("dd/MM/yyyy HH:mm")</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-align-left"></i> Descrição</h5>
+                            <div class="border rounded p-3 bg-light">
+                                @if (!string.IsNullOrEmpty(Model.Descricao))
+                                {
+                                    @Model.Descricao
+                                }
+                                else
+                                {
+                                    <em class="text-muted">Nenhuma descrição informada</em>
+                                }
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(Model.Observacoes))
+                            {
+                                <h5 class="mt-3"><i class="fas fa-sticky-note"></i> Observações</h5>
+                                <div class="border rounded p-3 bg-light">
+                                    @Model.Observacoes
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a asp-action="Index" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                        <a asp-action="Apagar" asp-route-id="@Model.Id" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Confirmar Exclusão
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

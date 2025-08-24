@@ -82,3 +82,45 @@ body {
     width: 30px;
     height: 31px;
 }
+
+/* Círculos de Progresso do Dashboard */
+.progress-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 18px;
+    color: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 3px solid transparent;
+}
+
+.progress-circle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.progress-green {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.progress-orange {
+    background: linear-gradient(135deg, #fd7e14, #ffc107);
+}
+
+.progress-yellow {
+    background: linear-gradient(135deg, #ffc107, #ffca2c);
+}
+
+.progress-red {
+    background: linear-gradient(135deg, #dc3545, #e74c3c);
+}
+
+.progress-blue {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

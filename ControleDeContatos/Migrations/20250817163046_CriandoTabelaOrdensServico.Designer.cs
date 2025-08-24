@@ -4,14 +4,16 @@ using ControleDeContatos.Models.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ControleDeContatos.Migrations
 {
     [DbContext(typeof(BancoContext))]
-    partial class BancoContextModelSnapshot : ModelSnapshot
+    [Migration("20250817163046_CriandoTabelaOrdensServico")]
+    partial class CriandoTabelaOrdensServico
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,111 +102,6 @@ namespace ControleDeContatos.Migrations
                     b.ToTable("Contatos");
                 });
 
-            modelBuilder.Entity("ControleDeContatos.Models.ItemOrcamentoModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Observacoes")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("OrcamentoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantidade")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Tipo")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<decimal>("ValorTotal")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ValorUnitario")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrcamentoId");
-
-                    b.ToTable("ItensOrcamento");
-                });
-
-            modelBuilder.Entity("ControleDeContatos.Models.OrcamentoModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DataAprovacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DataValidade")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("NumeroOrcamento")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Observacoes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int?>("OrdemServicoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("ValorTotal")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("VeiculoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClienteId");
-
-                    b.HasIndex("OrdemServicoId");
-
-                    b.HasIndex("VeiculoId");
-
-                    b.ToTable("Orcamentos");
-                });
-
             modelBuilder.Entity("ControleDeContatos.Models.OrdemServicoModel", b =>
                 {
                     b.Property<int>("Id")
@@ -231,11 +128,6 @@ namespace ControleDeContatos.Migrations
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("Mecanico")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("NumeroOS")
                         .IsRequired()
@@ -286,10 +178,6 @@ namespace ControleDeContatos.Migrations
                     b.Property<int>("ClienteId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Combustivel")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
                     b.Property<string>("Cor")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
@@ -324,52 +212,11 @@ namespace ControleDeContatos.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<string>("Renavam")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ClienteId");
 
                     b.ToTable("Veiculos");
-                });
-
-            modelBuilder.Entity("ControleDeContatos.Models.ItemOrcamentoModel", b =>
-                {
-                    b.HasOne("ControleDeContatos.Models.OrcamentoModel", "Orcamento")
-                        .WithMany("Itens")
-                        .HasForeignKey("OrcamentoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Orcamento");
-                });
-
-            modelBuilder.Entity("ControleDeContatos.Models.OrcamentoModel", b =>
-                {
-                    b.HasOne("ControleDeContatos.Models.ClienteModel", "Cliente")
-                        .WithMany()
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ControleDeContatos.Models.OrdemServicoModel", "OrdemServico")
-                        .WithMany()
-                        .HasForeignKey("OrdemServicoId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ControleDeContatos.Models.VeiculoModel", "Veiculo")
-                        .WithMany()
-                        .HasForeignKey("VeiculoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Cliente");
-
-                    b.Navigation("OrdemServico");
-
-                    b.Navigation("Veiculo");
                 });
 
             modelBuilder.Entity("ControleDeContatos.Models.OrdemServicoModel", b =>
@@ -400,11 +247,6 @@ namespace ControleDeContatos.Migrations
                         .IsRequired();
 
                     b.Navigation("Cliente");
-                });
-
-            modelBuilder.Entity("ControleDeContatos.Models.OrcamentoModel", b =>
-                {
-                    b.Navigation("Itens");
                 });
 #pragma warning restore 612, 618
         }

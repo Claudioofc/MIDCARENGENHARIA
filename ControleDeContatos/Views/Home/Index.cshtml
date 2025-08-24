@@ -1,8 +1,465 @@
 ﻿@{
-    ViewData["Title"] = "Página Inicial";
+    ViewData["Title"] = "Dashboard - Ordens de Serviço";
+    var ordensAbertas = ViewBag.OrdensAbertas as List<ControleDeContatos.Models.OrdemServicoModel>;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Bem Vindo!</h1>
-    <p>Sistema de controle de contatos</p>
+<style>
+
+    
+    .empty-state {
+        text-align: center;
+        padding: 20px;
+    }
+    
+    /* Animação Suave do Ícone do Dashboard */
+    .dashboard-icon {
+        color: #007bff;
+        animation: gentleGlow 2s ease-in-out infinite;
+        filter: drop-shadow(0 0 8px rgba(0, 123, 255, 0.3));
+        transition: all 0.3s ease;
+    }
+    
+    @@keyframes gentleGlow {
+        0% { filter: drop-shadow(0 0 8px rgba(0, 123, 255, 0.3)); }
+        50% { filter: drop-shadow(0 0 15px rgba(0, 123, 255, 0.6)); }
+        100% { filter: drop-shadow(0 0 8px rgba(0, 123, 255, 0.3)); }
+    }
+    
+    .dashboard-icon:hover {
+        color: #0056b3;
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 20px rgba(0, 123, 255, 0.8));
+    }
+    
+    /* Estilos para as Abas - Bootstrap */
+    .nav-tabs .nav-link {
+        border: 1px solid #dee2e6;
+        background: #fff;
+        color: #6c757d;
+        font-weight: 400;
+        padding: 10px 20px;
+        border-radius: 0;
+        transition: all 0.3s ease;
+        margin-right: 0;
+        position: relative;
+        border-bottom: none;
+        text-decoration: none;
+        opacity: 0.7;
+    }
+    
+    .nav-tabs .nav-link:hover {
+        background-color: #f8f9fa;
+        color: #495057;
+        border-color: #dee2e6;
+        opacity: 0.9;
+    }
+    
+    .nav-tabs .nav-link.active {
+        background-color: #007bff;
+        color: #fff;
+        border: 1px solid #007bff;
+        font-weight: 600;
+        border-bottom: 1px solid #fff;
+        z-index: 1;
+        opacity: 1;
+    }
+    
+
+    
+
+    
+    .tab-content {
+        background: #fff;
+        border: 1px solid #dee2e6;
+        border-top: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    
+    .tab-pane {
+        padding: 25px;
+    }
+</style>
+
+<div class="row">
+    <!-- Título Principal -->
+    <div class="col-12 mb-4">
+                        <h2 class="dashboard-title">
+                    <i class="fas fa-chart-area dashboard-icon"></i> Dashboard - Ordens de Serviço
+                </h2>
+    </div>
+    
+    <!-- Estatísticas com Círculos de Progresso -->
+    <div class="col-12 mb-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <div class="row align-items-center text-center">
+                    <div class="col-md-2">
+                        <a href="#" class="text-decoration-none" onclick="filtrarPorStatus('abertas')">
+                            <div class="progress-circle progress-yellow d-inline-flex align-items-center justify-content-center cursor-pointer">
+                                @(ViewBag.Percentuais?.DentroPrazo ?? 0)%
+                            </div>
+                            <div class="text-muted mt-2 small">OS Abertas</div>
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="#" class="text-decoration-none" onclick="filtrarPorStatus('em-andamento')">
+                            <div class="progress-circle progress-orange d-inline-flex align-items-center justify-content-center cursor-pointer">
+                                @(ViewBag.Percentuais?.EmAlerta ?? 0)%
+                            </div>
+                            <div class="text-muted mt-2 small">Em Andamento</div>
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="#" class="text-decoration-none" onclick="filtrarPorStatus('finalizadas')">
+                            <div class="progress-circle progress-green d-inline-flex align-items-center justify-content-center cursor-pointer">
+                                @(ViewBag.Percentuais?.NoLimite ?? 0)%
+                            </div>
+                            <div class="text-muted mt-2 small">Finalizadas</div>
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="#" class="text-decoration-none" onclick="filtrarPorStatus('canceladas')">
+                            <div class="progress-circle progress-red d-inline-flex align-items-center justify-content-center cursor-pointer">
+                                @(ViewBag.Percentuais?.PrazoExpirado ?? 0)%
+                            </div>
+                            <div class="text-muted mt-2 small">Canceladas</div>
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="#" class="text-decoration-none" onclick="filtrarPorStatus('todas')">
+                            <div class="progress-circle progress-blue d-inline-flex align-items-center justify-content-center cursor-pointer">
+                                @(ViewBag.Percentuais?.Total ?? 0)
+                            </div>
+                            <div class="text-muted mt-2 small">Total OS</div>
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="d-flex flex-column gap-2">
+                            <a href="/OrdemServico/Criar" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus me-1"></i> Nova OS
+                            </a>
+                            <a href="/OrdemServico" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-tachometer-alt me-1"></i> Ver Todas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Abas de Ordens de Serviço -->
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+
+            
+            <!-- Navegação por Abas -->
+            <ul class="nav nav-tabs border-0" id="ordensTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="abertas-tab" data-bs-toggle="tab" data-bs-target="#abertas" 
+                            type="button" role="tab" aria-controls="abertas" aria-selected="true">
+                        Ordens de Serviço <span class="badge bg-primary ms-1">@(ordensAbertas?.Count ?? 0)</span>
+                    </button>
+                </li>
+                
+
+            </ul>
+
+            <!-- Conteúdo das Abas -->
+            <div class="tab-content" id="ordensTabsContent">
+                <!-- Aba Ordens Abertas -->
+                <div class="tab-pane fade show active" id="abertas" role="tabpanel" aria-labelledby="abertas-tab" data-tab="abertas">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="fas fa-search text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0" placeholder="Pesquisar OS..." value="Pesquisar OS...">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="btn-group w-100" role="group">
+                                    <button type="button" class="btn btn-outline-warning active" id="filtro-todas">
+                                        <i class="fas fa-list me-1"></i>Todas
+                                    </button>
+                                    <button type="button" class="btn btn-outline-warning" id="filtro-abertas">
+                                        <i class="fas fa-clock me-1"></i>Abertas
+                                    </button>
+                                    <button type="button" class="btn btn-outline-success" id="filtro-fechadas">
+                                        <i class="fas fa-check me-1"></i>Fechadas
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+            
+                                    <div class="table-responsive">
+                            <table class="table table-hover table-striped mb-0" id="tabela-abertas">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">OS #</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Veículo</th>
+                            <th scope="col">Situação</th>
+                            <th scope="col">Mecânico</th>
+                            <th scope="col">Data Abertura</th>
+                            <th scope="col">Tempo Aberto</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col">Progresso</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-abertas">
+                        @if (ordensAbertas != null && ordensAbertas.Count > 0)
+                        {
+                            foreach (var ordem in ordensAbertas)
+                            {
+                                var diasAberto = (DateTime.Now - ordem.DataAbertura).Days;
+                                var tempoAberto = diasAberto == 0 ? "Hoje" : 
+                                                diasAberto == 1 ? "1 dia" : 
+                                                $"{diasAberto} dias";
+                                
+                                <tr>
+                                    <td><strong>@ordem.NumeroOS</strong></td>
+                                    <td>@ordem.Cliente?.Nome</td>
+                                    <td>@ordem.Veiculo?.Placa - @ordem.Veiculo?.Modelo</td>
+                                    <td>
+                                        @{
+                                            var badgeClass = ordem.Status switch
+                                            {
+                                                "Aberta" => "bg-warning",
+                                                "Em Andamento" => "bg-info",
+                                                "Finalizada" => "bg-success",
+                                                "Cancelada" => "bg-danger",
+                                                _ => "bg-secondary"
+                                            };
+                                        }
+                                        <span class="badge @badgeClass">
+                                            @(string.IsNullOrEmpty(ordem.Status) ? "Aberta" : ordem.Status)
+                                        </span>
+                                    </td>
+                                    <td>@ordem.Mecanico</td>
+                                    <td>@ordem.DataAbertura.ToString("dd/MM/yyyy")</td>
+                                    <td>@tempoAberto</td>
+                                    <td>R$ @ordem.Valor.ToString("N2")</td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar bg-success" role="progressbar" 
+                                                 style="width: @(ordem.Status == "Aberta" ? "25" : "75")%" 
+                                                 aria-valuenow="@(ordem.Status == "Aberta" ? "25" : "75")" 
+                                                 aria-valuemin="0" aria-valuemax="100">
+                                                @(ordem.Status == "Aberta" ? "25%" : "75%")
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            @if (ordem.Status != "Finalizada" && ordem.Status != "Cancelada")
+                                            {
+                                                <a href="/OrdemServico/Editar/@ordem.Id" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            }
+                                            <a href="/OrdemServico/Visualizar/@ordem.Id" class="btn btn-sm btn-outline-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="10" class="text-center py-5">
+                                    <div class="empty-state">
+                                        <i class="fas fa-clipboard-list fa-3x text-muted mb-3 d-block"></i>
+                                        <h5 class="text-muted">Nenhuma Ordem de Serviço encontrada</h5>
+                                        <p class="text-muted mb-3">Não há ordens de serviço abertas no momento.</p>
+                                        <a href="/OrdemServico/Criar" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-plus me-1"></i> Criar Nova OS
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
 </div>
+
+        @section Scripts {
+            <script>
+                // Versão para forçar refresh do cache
+                console.log('=== VERSÃO 2.0 - CACHE REFRESH ===');
+                
+                $(document).ready(function() {
+                    console.log('Document ready - Inicializando abas...');
+                    
+                    // Usar Bootstrap nativo para controle das abas
+                    var triggerTabList = [].slice.call(document.querySelectorAll('#ordensTabs button[data-bs-toggle="tab"]'));
+                    triggerTabList.forEach(function (triggerEl) {
+                        var tabTrigger = new bootstrap.Tab(triggerEl);
+                        
+                        triggerEl.addEventListener('click', function (event) {
+                            event.preventDefault();
+                            tabTrigger.show();
+                            var target = $(this).attr('data-bs-target');
+                            console.log('Aba ativada:', target);
+                            
+                            // Atualizar título do dashboard
+                            if (target === '#abertas') {
+                                $('.dashboard-title').text('Dashboard - Ordens de Serviço');
+                            }
+                        });
+                        
+                        // Evento quando a aba é mostrada
+                        triggerEl.addEventListener('shown.bs.tab', function (event) {
+                            var target = $(event.target).attr('data-bs-target');
+                            console.log('Aba mostrada:', target);
+                            
+                            // Limpar pesquisa ao trocar de aba
+                            $('.input-group input[type="text"]').val('Pesquisar OS...');
+                            
+
+                        });
+                    });
+                    
+                    // Pesquisa nas abas
+                    $('.input-group input[type="text"]').on('keyup', function() {
+                        var searchTerm = $(this).val().toLowerCase();
+                        var currentTab = $('.tab-pane.active');
+                        var tableRows = currentTab.find('table tbody tr');
+                        var hasResults = false;
+                        
+                        tableRows.each(function() {
+                            var row = $(this);
+                            var text = row.text().toLowerCase();
+                            
+                            if (row.find('.empty-state').length > 0) {
+                                row.hide();
+                                return;
+                            }
+                            
+                            if (text.indexOf(searchTerm) !== -1) {
+                                row.show();
+                                hasResults = true;
+                            } else {
+                                row.hide();
+                            }
+                        });
+                        
+                        var emptyState = currentTab.find('.empty-state');
+                        if (!hasResults && searchTerm.length > 0) {
+                            if (emptyState.length === 0) {
+                                var noResultsHtml = '<tr><td colspan="10" class="text-center py-4">' +
+                                    '<div class="empty-state">' +
+                                    '<i class="fas fa-search fa-3x text-muted mb-3"></i>' +
+                                    '<h5>Nenhum resultado encontrado</h5>' +
+                                    '<p class="text-muted">Tente usar termos diferentes na pesquisa.</p>' +
+                                    '</div></td></tr>';
+                                currentTab.find('table tbody').append(noResultsHtml);
+                            }
+                        } else {
+                            emptyState.closest('tr').remove();
+                        }
+                    });
+                    
+                    // Limpar pesquisa
+                    $('.input-group input[type="text"]').on('input', function() {
+                        if ($(this).val() === '') {
+                            var currentTab = $('.tab-pane.active');
+                            currentTab.find('table tbody tr').show();
+                            currentTab.find('.empty-state').closest('tr').remove();
+                        }
+                    });
+                    
+                    // Gerenciar campo de pesquisa
+                    $('.input-group input[type="text"]').on('focus', function() {
+                        if ($(this).val() === 'Pesquisar OS...') {
+                            $(this).val('').css('color', '#000');
+                        }
+                    });
+                    
+                    $('.input-group input[type="text"]').on('blur', function() {
+                        if ($(this).val() === '') {
+                            $(this).val('Pesquisar OS...').css('color', '#6c757d');
+                        }
+                    });
+                    
+                    $('.input-group input[type="text"]').css('color', '#6c757d');
+                    
+                    // Filtros de status
+                    $('#filtro-todas').click(function() {
+                        $('.btn-group button').removeClass('active');
+                        $(this).addClass('active');
+                        $('#tbody-abertas tr').show();
+                        $('.input-group input[type="text"]').val('Pesquisar OS...');
+                    });
+                    
+                    $('#filtro-abertas').click(function() {
+                        $('.btn-group button').removeClass('active');
+                        $(this).addClass('active');
+                        $('#tbody-abertas tr').each(function() {
+                            var row = $(this);
+                            var status = row.find('.badge').text().trim();
+                            if (status === 'Aberta' || status === 'Em Andamento' || status === '') {
+                                row.show();
+                            } else {
+                                row.hide();
+                            }
+                        });
+                        $('.input-group input[type="text"]').val('Pesquisar OS...');
+                    });
+                    
+                    $('#filtro-fechadas').click(function() {
+                        $('.btn-group button').removeClass('active');
+                        $(this).addClass('active');
+                        $('#tbody-abertas tr').each(function() {
+                            var row = $(this);
+                            var status = row.find('.badge').text().trim();
+                            if (status === 'Finalizada' || status === 'Cancelada') {
+                                row.show();
+                            } else {
+                                row.hide();
+                            }
+                        });
+                        $('.input-group input[type="text"]').val('Pesquisar OS...');
+                    });
+                    
+                    // Função para filtrar por status
+                    window.filtrarPorStatus = function(status) {
+                        console.log('Filtrando por status:', status);
+                        
+                        switch(status) {
+                            case 'abertas':
+                                window.location.href = '/OrdemServico?status=Aberta';
+                                break;
+                            case 'em-andamento':
+                                window.location.href = '/OrdemServico?status=Em Andamento';
+                                break;
+                            case 'finalizadas':
+                                window.location.href = '/OrdemServico?status=Finalizada';
+                                break;
+                            case 'canceladas':
+                                window.location.href = '/OrdemServico?status=Cancelada';
+                                break;
+                            case 'todas':
+                                window.location.href = '/OrdemServico';
+                                break;
+                        }
+                    };
+                });
+            </script>
+        }
