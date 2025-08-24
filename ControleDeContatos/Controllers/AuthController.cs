@@ -17,8 +17,8 @@ namespace ControleDeContatos.Controllers
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
-            // Validação no banco de dados
-            if (username == "admin@midcar.com" && password == "admin123")
+            // Validação simples - em produção, deve verificar no banco de dados
+            if (username == "admin" && password == "123456")
             {
                 var claims = new List<Claim>
                 {
