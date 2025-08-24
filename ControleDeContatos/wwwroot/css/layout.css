@@ -294,10 +294,106 @@ body {
 .alert-warning { background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); color: #856404; }
 .alert-info { background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%); color: #0c5460; }
 
+/* Responsividade para Mobile */
 @media (max-width: 768px) {
-    .sidebar { width: 100%; left: -100%; }
-    .main-content.sidebar-open { margin-left: 0; }
-    .content-wrapper { padding: 20px 15px; }
-    .top-header { padding: 15px 20px; }
-    .stats-card { padding: 20px; }
+    .sidebar { 
+        width: 100%; 
+        left: -100%; 
+    }
+    
+    .main-content.sidebar-open { 
+        margin-left: 0; 
+    }
+    
+    .content-wrapper { 
+        padding: 15px 10px; 
+    }
+    
+    .top-header { 
+        padding: 15px 20px; 
+    }
+    
+    .stats-card { 
+        padding: 15px; 
+        margin-bottom: 15px;
+    }
+    
+    .card {
+        margin-bottom: 15px;
+    }
+    
+    .card-header {
+        padding: 15px 20px;
+        font-size: 16px;
+    }
+    
+    .btn {
+        padding: 10px 15px;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    
+    .form-control {
+        padding: 10px 12px;
+        font-size: 16px; /* Evita zoom no iOS */
+    }
+    
+    .table {
+        font-size: 14px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 8px 5px;
+    }
+    
+    .nav-tabs .nav-link {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+    
+    .badge {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+    
+    .alert {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+    
+    /* Ajustes para telas muito pequenas */
+    @media (max-width: 480px) {
+        .content-wrapper { 
+            padding: 10px 5px; 
+        }
+        
+        .top-header { 
+            padding: 10px 15px; 
+        }
+        
+        .card-header {
+            padding: 12px 15px;
+            font-size: 14px;
+        }
+        
+        .btn {
+            width: 100%;
+            margin-bottom: 8px;
+        }
+        
+        .table-responsive {
+            font-size: 12px;
+        }
+        
+        .nav-tabs {
+            flex-wrap: wrap;
+        }
+        
+        .nav-tabs .nav-link {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+    }
 }
