@@ -30,7 +30,7 @@ namespace ControleDeContatos.Repositorio
                 .Include(os => os.Cliente)
                 .Include(os => os.Veiculo)
                 .Where(x => x.Ativo)
-                .OrderByDescending(os => os.DataAbertura)
+                .OrderByDescending(os => os.DataEntrada)
                 .ToList();
         }
 
@@ -40,7 +40,7 @@ namespace ControleDeContatos.Repositorio
                 .Include(os => os.Cliente)
                 .Include(os => os.Veiculo)
                 .Where(x => x.Ativo)
-                .OrderByDescending(os => os.DataAbertura)
+                .OrderByDescending(os => os.DataEntrada)
                 .ToList();
         }
 
@@ -50,7 +50,7 @@ namespace ControleDeContatos.Repositorio
                 .Include(os => os.Cliente)
                 .Include(os => os.Veiculo)
                 .Where(x => x.ClienteId == clienteId && x.Ativo)
-                .OrderByDescending(os => os.DataAbertura)
+                .OrderByDescending(os => os.DataEntrada)
                 .ToList();
         }
 
@@ -60,7 +60,7 @@ namespace ControleDeContatos.Repositorio
                 .Include(os => os.Cliente)
                 .Include(os => os.Veiculo)
                 .Where(x => x.VeiculoId == veiculoId && x.Ativo)
-                .OrderByDescending(os => os.DataAbertura)
+                .OrderByDescending(os => os.DataEntrada)
                 .ToList();
         }
 
@@ -70,15 +70,15 @@ namespace ControleDeContatos.Repositorio
                 .Include(os => os.Cliente)
                 .Include(os => os.Veiculo)
                 .Where(x => x.Status == status && x.Ativo)
-                .OrderByDescending(os => os.DataAbertura)
+                .OrderByDescending(os => os.DataEntrada)
                 .ToList();
         }
 
         public OrdemServicoModel Adicionar(OrdemServicoModel ordemServico)
         {
-            if (string.IsNullOrEmpty(ordemServico.NumeroOS))
+            if (string.IsNullOrEmpty(ordemServico.Numero))
             {
-                ordemServico.NumeroOS = GerarNumeroOS();
+                ordemServico.Numero = GerarNumeroOS();
             }
 
             _bancoContext.OrdensServico.Add(ordemServico);
@@ -92,13 +92,12 @@ namespace ControleDeContatos.Repositorio
 
             if (ordemDB == null) throw new System.Exception("Houve um erro na atualização da OS!");
 
-            ordemDB.NumeroOS = ordemServico.NumeroOS;
-            ordemDB.Descricao = ordemServico.Descricao;
-            ordemDB.Valor = ordemServico.Valor;
+            ordemDB.Numero = ordemServico.Numero;
+            ordemDB.DataEntrada = ordemServico.DataEntrada;
+            ordemDB.DataSaida = ordemServico.DataSaida;
             ordemDB.Status = ordemServico.Status;
-            ordemDB.DataInicio = ordemServico.DataInicio;
-            ordemDB.DataFinalizacao = ordemServico.DataFinalizacao;
             ordemDB.Observacoes = ordemServico.Observacoes;
+            ordemDB.ValorTotal = ordemServico.ValorTotal;
             ordemDB.ClienteId = ordemServico.ClienteId;
             ordemDB.VeiculoId = ordemServico.VeiculoId;
             ordemDB.Ativo = ordemServico.Ativo;
@@ -126,8 +125,8 @@ namespace ControleDeContatos.Repositorio
             return _bancoContext.OrdensServico
                 .Include(os => os.Cliente)
                 .Include(os => os.Veiculo)
-                .Where(x => x.NumeroOS.Contains(numeroOS) && x.Ativo)
-                .OrderByDescending(os => os.DataAbertura)
+                .Where(x => x.Numero.Contains(numeroOS) && x.Ativo)
+                .OrderByDescending(os => os.DataEntrada)
                 .ToList();
         }
 
@@ -136,14 +135,14 @@ namespace ControleDeContatos.Repositorio
             return _bancoContext.OrdensServico
                 .Include(os => os.Cliente)
                 .Include(os => os.Veiculo)
-                .FirstOrDefault(x => x.NumeroOS == numeroOS);
+                .FirstOrDefault(x => x.Numero == numeroOS);
         }
 
         public string GerarNumeroOS()
         {
             var ultimaOS = _bancoContext.OrdensServico
-                .Where(x => x.NumeroOS.StartsWith("OS"))
-                .OrderByDescending(x => x.NumeroOS)
+                .Where(x => x.Numero.StartsWith("OS"))
+                .OrderByDescending(x => x.Numero)
                 .FirstOrDefault();
 
             if (ultimaOS == null)
@@ -151,7 +150,7 @@ namespace ControleDeContatos.Repositorio
                 return "OS0001";
             }
 
-            var numero = ultimaOS.NumeroOS.Substring(2);
+            var numero = ultimaOS.Numero.Substring(2);
             if (int.TryParse(numero, out int num))
             {
                 return $"OS{(num + 1):D4}";
@@ -165,8 +164,8 @@ namespace ControleDeContatos.Repositorio
             return _bancoContext.OrdensServico
                 .Include(os => os.Cliente)
                 .Include(os => os.Veiculo)
-                .Where(x => x.DataAbertura >= dataInicio && x.DataAbertura <= dataFim && x.Ativo)
-                .OrderByDescending(os => os.DataAbertura)
+                .Where(x => x.DataEntrada >= dataInicio && x.DataEntrada <= dataFim && x.Ativo)
+                .OrderByDescending(os => os.DataEntrada)
                 .ToList();
         }
     }
