@@ -1,79 +1,32 @@
-# Arquivos de configuração sensíveis
-appsettings.json
-appsettings.Development.json
-appsettings.Production.json
-appsettings.Staging.json
-
-# Arquivos de usuário do Visual Studio
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-
-# Arquivos temporários
-*.tmp
-*.temp
-*.log
-
-# Diretórios de build
+# .NET
 bin/
 obj/
-.vs/
+*.user
+*.suo
+*.cache
+*.dll
+*.exe
+*.pdb
 
-# Arquivos de banco de dados
+# Visual Studio
+.vs/
+*.sln.docstates
+
+# Azure
+*.publishsettings
+*.pubxml
+
+# Logs
+*.log
+
+# Environment
+.env
+appsettings.Production.json
+
+# Database
 *.mdf
 *.ldf
-*.ndf
 
-# Arquivos de backup
-*.bak
-*.backup
-
-# Arquivos de configuração local
-local.settings.json
-secrets.json
-
-# Arquivos de certificados
-*.pfx
-*.p12
-*.key
-*.crt
-
-# Arquivos de ambiente
-.env
-.env.local
-.env.development
-.env.production
-
-# Arquivos de IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Arquivos do Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# Arquivos de cache
-*.cache
-.cache/
-
-# Arquivos de logs
-logs/
-*.log.*
-
-# Arquivos de teste
-TestResults/
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
-
-# Arquivos de cobertura de código
-*.coverage
-*.coveragexml
-
-# Arquivos de publicação
-publish/
-*.pubxml
-*.publishproj
+# Temporary files
+*.tmp
+*.temp
