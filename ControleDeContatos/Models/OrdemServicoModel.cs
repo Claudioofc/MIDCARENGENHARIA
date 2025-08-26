@@ -26,6 +26,10 @@ namespace ControleDeContatos.Models
         [Range(0.01, double.MaxValue, ErrorMessage = "O valor deve ser maior que zero")]
         public decimal ValorTotal { get; set; }
 
+        [Required(ErrorMessage = "Digite o nome do mecânico")]
+        [StringLength(100, ErrorMessage = "O nome do mecânico deve ter no máximo 100 caracteres")]
+        public string Mecanico { get; set; } = "Milton Diego";
+
         public DateTime DataCadastro { get; set; } = DateTime.Now;
         public bool Ativo { get; set; } = true;
 

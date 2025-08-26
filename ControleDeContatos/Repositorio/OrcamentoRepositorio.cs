@@ -21,7 +21,6 @@ namespace ControleDeContatos.Repositorio
             return _bancoContext.Orcamentos
                 .Include(o => o.Cliente)
                 .Include(o => o.Veiculo)
-                .Include(o => o.OrdemServico)
                 .Include(o => o.Itens)
                 .FirstOrDefault(x => x.Id == id);
         }
@@ -31,8 +30,7 @@ namespace ControleDeContatos.Repositorio
             return _bancoContext.Orcamentos
                 .Include(o => o.Cliente)
                 .Include(o => o.Veiculo)
-                .Include(o => o.OrdemServico)
-                .OrderByDescending(o => o.DataCriacao)
+                .OrderByDescending(o => o.DataOrcamento)
                 .ToList();
         }
 
@@ -41,9 +39,8 @@ namespace ControleDeContatos.Repositorio
             return _bancoContext.Orcamentos
                 .Include(o => o.Cliente)
                 .Include(o => o.Veiculo)
-                .Include(o => o.OrdemServico)
                 .Where(x => x.Ativo)
-                .OrderByDescending(o => o.DataCriacao)
+                .OrderByDescending(o => o.DataOrcamento)
                 .ToList();
         }
 
@@ -52,9 +49,8 @@ namespace ControleDeContatos.Repositorio
             return _bancoContext.Orcamentos
                 .Include(o => o.Cliente)
                 .Include(o => o.Veiculo)
-                .Include(o => o.OrdemServico)
                 .Where(x => x.ClienteId == clienteId && x.Ativo)
-                .OrderByDescending(o => o.DataCriacao)
+                .OrderByDescending(o => o.DataOrcamento)
                 .ToList();
         }
 
@@ -63,9 +59,8 @@ namespace ControleDeContatos.Repositorio
             return _bancoContext.Orcamentos
                 .Include(o => o.Cliente)
                 .Include(o => o.Veiculo)
-                .Include(o => o.OrdemServico)
                 .Where(x => x.VeiculoId == veiculoId && x.Ativo)
-                .OrderByDescending(o => o.DataCriacao)
+                .OrderByDescending(o => o.DataOrcamento)
                 .ToList();
         }
 
@@ -74,17 +69,16 @@ namespace ControleDeContatos.Repositorio
             return _bancoContext.Orcamentos
                 .Include(o => o.Cliente)
                 .Include(o => o.Veiculo)
-                .Include(o => o.OrdemServico)
                 .Where(x => x.Status == status && x.Ativo)
-                .OrderByDescending(o => o.DataCriacao)
+                .OrderByDescending(o => o.DataOrcamento)
                 .ToList();
         }
 
         public OrcamentoModel Adicionar(OrcamentoModel orcamento)
         {
-            if (string.IsNullOrEmpty(orcamento.NumeroOrcamento))
+            if (string.IsNullOrEmpty(orcamento.Numero))
             {
-                orcamento.NumeroOrcamento = GerarNumeroOrcamento();
+                orcamento.Numero = GerarNumeroOrcamento();
             }
 
             _bancoContext.Orcamentos.Add(orcamento);
@@ -98,16 +92,14 @@ namespace ControleDeContatos.Repositorio
 
             if (orcamentoDB == null) throw new System.Exception("Houve um erro na atualização do orçamento!");
 
-            orcamentoDB.NumeroOrcamento = orcamento.NumeroOrcamento;
-            orcamentoDB.Descricao = orcamento.Descricao;
-            orcamentoDB.ValorTotal = orcamento.ValorTotal;
+            orcamentoDB.Numero = orcamento.Numero;
+            orcamentoDB.DataOrcamento = orcamento.DataOrcamento;
+            orcamentoDB.Validade = orcamento.Validade;
             orcamentoDB.Status = orcamento.Status;
-            orcamentoDB.DataAprovacao = orcamento.DataAprovacao;
-            orcamentoDB.DataValidade = orcamento.DataValidade;
             orcamentoDB.Observacoes = orcamento.Observacoes;
+            orcamentoDB.ValorTotal = orcamento.ValorTotal;
             orcamentoDB.ClienteId = orcamento.ClienteId;
             orcamentoDB.VeiculoId = orcamento.VeiculoId;
-            orcamentoDB.OrdemServicoId = orcamento.OrdemServicoId;
             orcamentoDB.Ativo = orcamento.Ativo;
 
             _bancoContext.Orcamentos.Update(orcamentoDB);
@@ -133,9 +125,8 @@ namespace ControleDeContatos.Repositorio
             return _bancoContext.Orcamentos
                 .Include(o => o.Cliente)
                 .Include(o => o.Veiculo)
-                .Include(o => o.OrdemServico)
-                .Where(x => x.NumeroOrcamento.Contains(numeroOrcamento) && x.Ativo)
-                .OrderByDescending(o => o.DataCriacao)
+                .Where(x => x.Numero.Contains(numeroOrcamento) && x.Ativo)
+                .OrderByDescending(o => o.DataOrcamento)
                 .ToList();
         }
 
@@ -144,15 +135,14 @@ namespace ControleDeContatos.Repositorio
             return _bancoContext.Orcamentos
                 .Include(o => o.Cliente)
                 .Include(o => o.Veiculo)
-                .Include(o => o.OrdemServico)
-                .FirstOrDefault(x => x.NumeroOrcamento == numeroOrcamento);
+                .FirstOrDefault(x => x.Numero == numeroOrcamento);
         }
 
         public string GerarNumeroOrcamento()
         {
             var ultimoOrcamento = _bancoContext.Orcamentos
-                .Where(x => x.NumeroOrcamento.StartsWith("ORC"))
-                .OrderByDescending(x => x.NumeroOrcamento)
+                .Where(x => x.Numero.StartsWith("ORC"))
+                .OrderByDescending(x => x.Numero)
                 .FirstOrDefault();
 
             if (ultimoOrcamento == null)
@@ -160,7 +150,7 @@ namespace ControleDeContatos.Repositorio
                 return "ORC0001";
             }
 
-            var numero = ultimoOrcamento.NumeroOrcamento.Substring(3);
+            var numero = ultimoOrcamento.Numero.Substring(3);
             if (int.TryParse(numero, out int num))
             {
                 return $"ORC{(num + 1):D4}";
@@ -174,59 +164,9 @@ namespace ControleDeContatos.Repositorio
             return _bancoContext.Orcamentos
                 .Include(o => o.Cliente)
                 .Include(o => o.Veiculo)
-                .Include(o => o.OrdemServico)
-                .Where(x => x.DataCriacao >= dataInicio && x.DataCriacao <= dataFim && x.Ativo)
-                .OrderByDescending(o => o.DataCriacao)
+                .Where(x => x.DataOrcamento >= dataInicio && x.DataOrcamento <= dataFim && x.Ativo)
+                .OrderByDescending(o => o.DataOrcamento)
                 .ToList();
-        }
-
-        public OrcamentoModel AprovarOrcamento(int id)
-        {
-            var orcamento = ListarPorId(id);
-            if (orcamento == null) throw new System.Exception("Orçamento não encontrado!");
-
-            orcamento.Status = "Aprovado";
-            orcamento.DataAprovacao = DateTime.Now;
-            orcamento.DataValidade = DateTime.Now.AddDays(30); // Válido por 30 dias
-
-            _bancoContext.Orcamentos.Update(orcamento);
-            _bancoContext.SaveChanges();
-
-            return orcamento;
-        }
-
-        public OrcamentoModel RejeitarOrcamento(int id)
-        {
-            var orcamento = ListarPorId(id);
-            if (orcamento == null) throw new System.Exception("Orçamento não encontrado!");
-
-            orcamento.Status = "Rejeitado";
-
-            _bancoContext.Orcamentos.Update(orcamento);
-            _bancoContext.SaveChanges();
-
-            return orcamento;
-        }
-
-        public OrcamentoModel ConverterEmOS(int id, int ordemServicoId)
-        {
-            var orcamento = ListarPorId(id);
-            if (orcamento == null) throw new System.Exception("Orçamento não encontrado!");
-
-            orcamento.Status = "Convertido em OS";
-            orcamento.OrdemServicoId = ordemServicoId;
-
-            _bancoContext.Orcamentos.Update(orcamento);
-            _bancoContext.SaveChanges();
-
-            return orcamento;
-        }
-
-        public decimal CalcularValorTotal(int orcamentoId)
-        {
-            return _bancoContext.ItensOrcamento
-                .Where(i => i.OrcamentoId == orcamentoId && i.Ativo)
-                .Sum(i => i.ValorTotal);
         }
     }
 }

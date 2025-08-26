@@ -98,6 +98,7 @@ namespace ControleDeContatos.Repositorio
             ordemDB.Status = ordemServico.Status;
             ordemDB.Observacoes = ordemServico.Observacoes;
             ordemDB.ValorTotal = ordemServico.ValorTotal;
+            ordemDB.Mecanico = ordemServico.Mecanico;
             ordemDB.ClienteId = ordemServico.ClienteId;
             ordemDB.VeiculoId = ordemServico.VeiculoId;
             ordemDB.Ativo = ordemServico.Ativo;

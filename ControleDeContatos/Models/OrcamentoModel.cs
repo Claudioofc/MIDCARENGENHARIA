@@ -10,26 +10,24 @@ namespace ControleDeContatos.Models
 
         [Required(ErrorMessage = "Digite o número do orçamento")]
         [StringLength(20, ErrorMessage = "O número do orçamento deve ter no máximo 20 caracteres")]
-        public string NumeroOrcamento { get; set; }
+        public string Numero { get; set; }
 
-        [Required(ErrorMessage = "Digite a descrição do orçamento")]
-        [StringLength(1000, ErrorMessage = "A descrição deve ter no máximo 1000 caracteres")]
-        public string Descricao { get; set; }
+        [Required(ErrorMessage = "Digite a data do orçamento")]
+        public DateTime DataOrcamento { get; set; } = DateTime.Now;
+        
+        public DateTime? Validade { get; set; }
+
+        [Required(ErrorMessage = "Selecione o status do orçamento")]
+        public string Status { get; set; } = "Pendente"; // Pendente, Aprovado, Rejeitado, Convertido em OS
+
+        [StringLength(500, ErrorMessage = "As observações devem ter no máximo 500 caracteres")]
+        public string Observacoes { get; set; }
 
         [Required(ErrorMessage = "Digite o valor total")]
         [Range(0.01, double.MaxValue, ErrorMessage = "O valor deve ser maior que zero")]
         public decimal ValorTotal { get; set; }
 
-        [Required(ErrorMessage = "Selecione o status do orçamento")]
-        public string Status { get; set; } // Pendente, Aprovado, Rejeitado, Convertido em OS
-
-        public DateTime DataCriacao { get; set; } = DateTime.Now;
-        public DateTime? DataAprovacao { get; set; }
-        public DateTime? DataValidade { get; set; }
-
-        [StringLength(500, ErrorMessage = "As observações devem ter no máximo 500 caracteres")]
-        public string Observacoes { get; set; }
-
+        public DateTime DataCadastro { get; set; } = DateTime.Now;
         public bool Ativo { get; set; } = true;
 
         // Relacionamentos
@@ -40,10 +38,6 @@ namespace ControleDeContatos.Models
         [Required(ErrorMessage = "Selecione o veículo")]
         public int VeiculoId { get; set; }
         public virtual VeiculoModel Veiculo { get; set; }
-
-        // Relacionamento com OS (quando convertido)
-        public int? OrdemServicoId { get; set; }
-        public virtual OrdemServicoModel OrdemServico { get; set; }
 
         // Itens do orçamento
         public virtual ICollection<ItemOrcamentoModel> Itens { get; set; } = new List<ItemOrcamentoModel>();
